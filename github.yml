@@ -1,0 +1,12 @@
+name: Spring boot Continuos Integration
+
+on: [push]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Image Docker Maven
+        uses: docker://maven:3.9.7-eclipse-temurin-17-focal
+      - name: Run Tests
+        run: mvn test
