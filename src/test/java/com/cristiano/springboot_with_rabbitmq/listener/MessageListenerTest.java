@@ -31,7 +31,7 @@ class MessageListenerTest {
     @BeforeEach
     void setup(){
         Awaitility.await()
-                .atMost(Duration.ofSeconds(10))
+                .atMost(Duration.ofSeconds(30))
                 .until(isRunningRabbit(), is(true));
     }
 
