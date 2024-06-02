@@ -4,6 +4,7 @@ import com.cristiano.springboot_with_rabbitmq.config.RabbitTestContainer;
 import com.cristiano.springboot_with_rabbitmq.dto.MessageDTO;
 import com.cristiano.springboot_with_rabbitmq.util.DataGenerator;
 import org.awaitility.Awaitility;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -27,6 +28,13 @@ class MessageListenerTest {
 
     private static final String ROUTING_KEY = "message.notification";
 
+    @BeforeEach
+    void setup(){
+        Awaitility.await()
+                .atMost(Duration.ofSeconds(10))
+                .until(isRunningRabbit(), is(true));
+    }
+
     @Test
     void consume_runSuccessfully_whenReceiveMessage(CapturedOutput output){
         MessageDTO message = DataGenerator.buildMessageValid();
@@ -39,14 +47,18 @@ class MessageListenerTest {
 
         Awaitility.await()
                 .atMost(Duration.ofSeconds(10))
-                .until(isRunningRabbit(output), is(true));
+                .until(messageConsumed(output), is(true));
 
         assertTrue(output.getOut().contains("Message: "+message.getMessage()));
         assertTrue(output.getOut().contains("email: "+message.getEmail()));
         assertTrue(output.getOut().contains("name: "+message.getName()));
     }
 
-    private Callable<Boolean> isRunningRabbit(CapturedOutput output){
+    private Callable<Boolean> messageConsumed(CapturedOutput output){
         return () -> output.getOut().contains("Message: ");
+    }
+
+    private Callable<Boolean> isRunningRabbit(){
+        return () -> RabbitTestContainer.container.isRunning();
     }
 }
