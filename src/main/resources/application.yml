@@ -6,16 +6,5 @@ spring:
     port: 5672
     username: guest
     password: guest
-    topic-exchange-name: "sent-email"
-    queue-name: "email.notification"
-  mail:
-    host: sandbox.smtp.mailtrap.io
-    port: 587
-    username: ${MAIL_USER}
-    password: ${MAIL_PASS}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
+    topic-exchange-name: "sent-message"
+    queue-name: "message.notification"

@@ -12,7 +12,7 @@ public class MessageService {
     private final RabbitTemplate rabbitTemplate;
     private final String exchangeName;
 
-    private static final String ROUTING_KEY = "email.notification.message";
+    private static final String ROUTING_KEY = "message.notification";
 
     public MessageService(
             @Value("${spring.rabbitmq.topic-exchange-name}") String exchangeName,
