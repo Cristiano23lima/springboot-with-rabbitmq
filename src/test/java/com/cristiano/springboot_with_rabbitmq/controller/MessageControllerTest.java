@@ -15,7 +15,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-class MessageControllerTest implements RabbitTestContainer {
+class MessageControllerTest extends RabbitTestContainer {
 
     @Autowired
     private WebTestClient webTestClient;

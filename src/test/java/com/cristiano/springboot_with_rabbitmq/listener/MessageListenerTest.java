@@ -7,6 +7,8 @@ import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,17 +23,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ExtendWith(OutputCaptureExtension.class)
-class MessageListenerTest implements RabbitTestContainer {
-
+class MessageListenerTest extends RabbitTestContainer {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    private static final String ROUTING_KEY = "message.notification";
-
     @BeforeEach
     void setup(){
+        Logger logger = LoggerFactory.getLogger(MessageListenerTest.class);
+        logger.info("RabbitMQ Container host: {}", container.getHost());
+        logger.info("RabbitMQ Container port: {}", container.getMappedPort(5672));
+        logger.info("RabbitMQ Container is running: {}", container.isRunning());
+
         Awaitility.await()
-                .atMost(Duration.ofSeconds(10))
+                .atMost(Duration.ofSeconds(30))
                 .until(isRunningRabbit(), is(true));
     }
 
@@ -40,7 +44,7 @@ class MessageListenerTest implements RabbitTestContainer {
         MessageDTO message = DataGenerator.buildMessageValid();
 
         rabbitTemplate.convertAndSend(
-                rabbitTemplate.getExchange(),
+                "sent-message",
                 ROUTING_KEY,
                 message
         );
