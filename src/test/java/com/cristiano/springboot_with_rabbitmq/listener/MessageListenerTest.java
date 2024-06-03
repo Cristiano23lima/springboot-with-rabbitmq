@@ -28,13 +28,6 @@ class MessageListenerTest {
 
     private static final String ROUTING_KEY = "message.notification";
 
-    @BeforeEach
-    void setup(){
-        Awaitility.await()
-                .atMost(Duration.ofSeconds(30))
-                .until(isRunningRabbit(), is(true));
-    }
-
     @Test
     void consume_runSuccessfully_whenReceiveMessage(CapturedOutput output){
         MessageDTO message = DataGenerator.buildMessageValid();
