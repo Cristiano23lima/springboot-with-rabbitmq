@@ -12,5 +12,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: 'maven'
+      - name: Display Docker Version
+        run: docker --version
       - name: Run Tests
+        env:
+          TESTCONTAINERS_RYUK_DISABLED: 'true'
         run: mvn test
