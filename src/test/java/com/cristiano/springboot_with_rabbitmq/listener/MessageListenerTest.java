@@ -21,12 +21,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ExtendWith(OutputCaptureExtension.class)
-class MessageListenerTest {
+class MessageListenerTest implements RabbitTestContainer {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
     private static final String ROUTING_KEY = "message.notification";
+
+    @BeforeEach
+    void setup(){
+        Awaitility.await()
+                .atMost(Duration.ofSeconds(10))
+                .until(isRunningRabbit(), is(true));
+    }
 
     @Test
     void consume_runSuccessfully_whenReceiveMessage(CapturedOutput output){
